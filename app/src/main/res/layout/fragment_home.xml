@@ -1,0 +1,50 @@
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:background="#282837"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:gravity="center"
+    android:padding="24dp">
+
+    <TextView
+        android:id="@+id/tvWelcome"
+        android:text="000님 환영합니다!"
+        android:textColor="#FFFFFF"
+        android:textSize="40sp"
+        android:layout_marginBottom="40dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"/>
+
+    <Button
+        android:id="@+id/btnEnroll"
+        android:text="수강신청"
+        android:textSize="20sp"
+        android:backgroundTint="#D9D9D9"
+        android:textColor="@color/black"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        />
+
+    <Button
+        android:id="@+id/btnTicket"
+        android:text="티켓팅"
+        android:textSize="20sp"
+        android:backgroundTint="#D9D9D9"
+        android:textColor="@color/black"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        />
+
+    <Button
+        android:id="@+id/btnMarket"
+        android:textSize="20sp"
+        android:text="게시판"
+        android:backgroundTint="#D9D9D9"
+        android:textColor="@color/black"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+       />
+</LinearLayout>

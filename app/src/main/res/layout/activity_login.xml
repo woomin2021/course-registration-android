@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="24dp"
+    android:gravity="center"
+    android:background="#282837">
+
+
+    <ImageView
+        android:id="@+id/logoImage"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_gravity="center"
+        android:src="@drawable/logo"
+        android:scaleType="fitCenter" />
+    <EditText
+        android:id="@+id/etUserID"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="아이디"
+
+        android:textColorHint="#888888"
+        android:textColor="@color/black"
+
+        android:background="@android:drawable/editbox_background" />
+
+    <EditText
+        android:id="@+id/etPassword"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="비밀번호"
+        android:inputType="textPassword"
+        android:textColorHint="#888888"
+        android:textColor="@color/black"
+
+        android:background="@android:drawable/editbox_background"
+        android:layout_marginTop="12dp" />
+
+    <Button
+        android:id="@+id/btnLogin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="로그인"
+        android:backgroundTint="#D9D9D9"
+        android:textColor="@color/black"
+        android:layout_marginTop="24dp" />
+
+    <Button
+        android:id="@+id/btnSignup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:backgroundTint="#D9D9D9"
+        android:textColor="@color/black"
+        android:text="회원가입"
+        android:layout_marginTop="12dp" />
+</LinearLayout>
