@@ -1,3 +1,4 @@
+// EnrollmentFragment.java
 package com.example.pro_test;
 
 import android.os.Bundle;
@@ -16,8 +17,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
-import com.android.volley.Response;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
@@ -33,54 +32,44 @@ public class EnrollmentFragment extends Fragment {
     private Button btnStartTimer;
     private RecyclerView rvSubjects;
     private final int START_HOUR = 9;
-    private final int START_MINUTE = 58;
-    private final int START_SECOND = 0;
+    private final int START_MINUTE = 59;
+    private final int START_SECOND = 58;
+    private String userID;
 
-    private long baseTimeMillis;  // 기준 시간 저장
+    private long baseTimeMillis = 0;
     private Handler handler = new Handler();
 
-    // 1. 선언부에 추가
     private void ComeonSubjectsFromServer() {
-        Log.d("SubjectDebug", "📡 ComeonSubjectsFromServer() 호출됨");
         String url = "http://10.0.2.2:8080/get_subjects.jsp";
-        Response.Listener<String> responseListener = response -> {
-            try {
-                JSONArray jsonArray = new JSONArray(response);
-                Log.d("SubjectDebug", "받아온 개수: " + jsonArray.length());
 
-                List<SubjectAdapter.Subject> subjectList = new ArrayList<>();
+        Volley.newRequestQueue(requireContext()).add(
+                new StringRequest(Request.Method.GET, url, response -> {
+                    try {
+                        JSONArray jsonArray = new JSONArray(response);
+                        List<SubjectAdapter.Subject> subjectList = new ArrayList<>();
 
-                for (int i = 0; i < jsonArray.length(); i++) {
-                    JSONObject obj = jsonArray.getJSONObject(i);
-                    int id = obj.getInt("subject_id");
-                    String title = obj.getString("title");
-                    int maxSeat = obj.getInt("max_seat");
-                    subjectList.add(new SubjectAdapter.Subject(id, title, maxSeat));
-                }
+                        for (int i = 0; i < jsonArray.length(); i++) {
+                            JSONObject obj = jsonArray.getJSONObject(i);
+                            int id = obj.getInt("subject_id");
+                            String title = obj.getString("title");
+                            int maxSeat = obj.getInt("max_seat");
+                            subjectList.add(new SubjectAdapter.Subject(id, title, maxSeat));
+                        }
 
-                Log.d("SubjectDebug", "subjectList 크기: " + subjectList.size());
+                        SubjectAdapter adapter = new SubjectAdapter(requireContext(), userID, subjectList, baseTimeMillis); // 여기 있는거 다 넘겨야 기록이 제대로 넘어감 그래야지 내기록까지 커버 가능 
+                        rvSubjects.setAdapter(adapter);
 
-                SubjectAdapter adapter = new SubjectAdapter(subjectList);
-                rvSubjects.setAdapter(adapter);
-
-            } catch (Exception e) {
-                e.printStackTrace();
-                Log.e("SubjectDebug", "파싱 에러: " + e.getMessage());
-            }
-        };
-
-        RequestQueue queue = Volley.newRequestQueue(requireContext());
-        StringRequest request = new StringRequest(Request.Method.GET, url, responseListener, error -> {
-            Log.e("SubjectDebug", "Volley 요청 실패: " + error.toString());
-            error.printStackTrace();
-        });
-        queue.add(request);
-    }
-    public EnrollmentFragment() {
-
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                        Log.e("SubjectDebug", "파싱 에러: " + e.getMessage());
+                    }
+                }, error -> {
+                    Log.e("SubjectDebug", "Volley 요청 실패: " + error.toString());
+                    error.printStackTrace();
+                })
+        );
     }
 
-    @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_enrollment, container, false);
@@ -91,17 +80,10 @@ public class EnrollmentFragment extends Fragment {
 
         rvSubjects.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        // 과목 목록은 향후 서버/DB 연동으로 대체될 예정
-        List<SubjectAdapter.Subject> subjectList = new ArrayList<>();
-        SubjectAdapter adapter = new SubjectAdapter(subjectList); // 빈 adapter 또는 더미 데이터 연결 가능
-        rvSubjects.setAdapter(adapter);
+        userID = getActivity().getIntent().getStringExtra("userID");
 
         btnStartTimer.setOnClickListener(v -> {
-
-            long currentClickTime = System.currentTimeMillis();
-            double elapsedSec = (currentClickTime - baseTimeMillis) / 1000.0;
-
-            baseTimeMillis = System.currentTimeMillis();
+            baseTimeMillis = System.currentTimeMillis(); // ✅ 기준 시간 설정
             runTimer();
             ComeonSubjectsFromServer();
         });
@@ -117,7 +99,6 @@ public class EnrollmentFragment extends Fragment {
                 long elapsedMillis = currentTime - baseTimeMillis;
 
                 int elapsedSeconds = (int) (elapsedMillis / 1000);
-
                 int startInSeconds = START_HOUR * 3600 + START_MINUTE * 60 + START_SECOND;
                 int currentTotalSeconds = startInSeconds + elapsedSeconds;
 

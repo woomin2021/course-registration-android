@@ -1,6 +1,9 @@
+// ✅ SubjectAdapter.java
 package com.example.pro_test;
 
 import android.app.AlertDialog;
+import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,18 +14,29 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.android.volley.Request;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class SubjectAdapter extends RecyclerView.Adapter<SubjectAdapter.SubjectViewHolder> {
 
-    private long baseTimeMillis;
+    private final Context context;
+    private final String userID;
+    private final List<Subject> subjectList;
+    private final long baseTimeMillis;
+    private boolean userWin;
+    private double userTime;
+    private int userRank;
 
-    // Subject 모델 클래스
     public static class Subject {
-        private int subjectId;
-        private String title;
-        private int maxSeat;
+        private final int subjectId;
+        private final String title;
+        private final int maxSeat;
 
         public Subject(int subjectId, String title, int maxSeat) {
             this.subjectId = subjectId;
@@ -34,9 +48,10 @@ public class SubjectAdapter extends RecyclerView.Adapter<SubjectAdapter.SubjectV
         public String getTitle() { return title; }
         public int getMaxSeat() { return maxSeat; }
     }
+
     public static class Participant {
         String name;
-        double clickTime; // 초 단위
+        double clickTime;
         boolean isUser;
 
         public Participant(String name, double clickTime, boolean isUser) {
@@ -45,18 +60,18 @@ public class SubjectAdapter extends RecyclerView.Adapter<SubjectAdapter.SubjectV
             this.isUser = isUser;
         }
     }
-    private final List<Subject> subjectList;
 
-    // 외부에서 과목 리스트를 전달받음 우리가 더미로 하면 간단하게 끝나는데 디비에서 받아야 해서 생성자 생성 해줘야 해
-    public SubjectAdapter(List<Subject> subjectList) {
+    public SubjectAdapter(Context context, String userID, List<Subject> subjectList, long baseTimeMillis) {
+        this.context = context;
+        this.userID = userID;
         this.subjectList = subjectList;
+        this.baseTimeMillis = baseTimeMillis;
     }
 
     @NonNull
     @Override
     public SubjectViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.item_subject, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_subject, parent, false);
         return new SubjectViewHolder(view);
     }
 
@@ -65,7 +80,6 @@ public class SubjectAdapter extends RecyclerView.Adapter<SubjectAdapter.SubjectV
         Subject subject = subjectList.get(position);
         holder.tvSubject.setText(subject.getTitle());
         holder.tvPeople.setText(subject.getMaxSeat() + "명");
-        // 수강 신청 버튼 클릭 처리 (경쟁 시뮬레이션 로직 여기에 작성 예정)
 
         holder.btnApply.setOnClickListener(v -> {
             long currentClickTime = System.currentTimeMillis();
@@ -74,26 +88,25 @@ public class SubjectAdapter extends RecyclerView.Adapter<SubjectAdapter.SubjectV
             List<Participant> list = new ArrayList<>();
             list.add(new Participant("나", elapsedSec, true));
 
-            // 봇 4명 생성 (0.3초 ~ 1.5초 랜덤)
             for (int i = 1; i <= 4; i++) {
-                double botTime = 0.3 + Math.random() * 1.2;
+                double botTime = 2.0 + Math.random(); // 봇 난이도 조절
                 list.add(new Participant("자동봇" + i, botTime, false));
             }
 
-            // 반응 시간 빠른 순 정렬
             list.sort((a, b) -> Double.compare(a.clickTime, b.clickTime));
 
-            // 결과 문자열 만들기
-            StringBuilder result = new StringBuilder();
-            result.append("[예약 현황]\n");
+            StringBuilder result = new StringBuilder("[예약 현황]\n");
 
-            int successCount = 0;
-            boolean userSucceeded = false;
+            userTime = elapsedSec;
 
             for (int i = 0; i < list.size(); i++) {
                 Participant p = list.get(i);
-                boolean success = i < 2; // 상위 2명만 성공
-                if (p.isUser && success) userSucceeded = true;
+                boolean success = i < 2;
+
+                if (p.isUser) {
+                    userWin = success;
+                    userRank = i + 1;
+                }
 
                 result.append((i + 1)).append("등: ").append(p.name)
                         .append(String.format(" (%.2f초)", p.clickTime))
@@ -103,18 +116,32 @@ public class SubjectAdapter extends RecyclerView.Adapter<SubjectAdapter.SubjectV
                 result.append("\n");
             }
 
-            // 결과 출력
             new AlertDialog.Builder(holder.itemView.getContext())
                     .setTitle("수강신청 결과")
                     .setMessage(result.toString())
                     .setPositiveButton("확인", null)
                     .show();
 
-            // 실패한 사용자에겐 Toast
-            if (!userSucceeded) {
-                Toast.makeText(holder.itemView.getContext(),
-                        "신청 실패 – 너무 느렸습니다", Toast.LENGTH_SHORT).show();
+            if (!userWin) {
+                Toast.makeText(holder.itemView.getContext(), "신청 실패 – 너무 느렸습니다", Toast.LENGTH_SHORT).show();
             }
+
+            StringRequest request = new StringRequest(Request.Method.POST, "http://10.0.2.2:8080/save_enrollment.jsp",
+                    response -> Log.d("EnrollSave", "저장 성공: " + response),
+                    error -> Log.e("EnrollSave", "저장 실패: " + error.toString())) {
+                @Override
+                protected Map<String, String> getParams() {
+                    Map<String, String> params = new HashMap<>();
+                    params.put("userID", userID);
+                    params.put("subject_id", String.valueOf(subject.getSubjectId()));
+                    params.put("apply_time", String.format("%.2f", userTime));
+                    params.put("result", userWin ? "성공" : "실패");
+                    params.put("ranking", String.valueOf(userRank));
+                    return params;
+                }
+            };
+
+            Volley.newRequestQueue(holder.itemView.getContext()).add(request);
         });
     }
 
@@ -123,7 +150,6 @@ public class SubjectAdapter extends RecyclerView.Adapter<SubjectAdapter.SubjectV
         return subjectList.size();
     }
 
-    // ViewHolder
     static class SubjectViewHolder extends RecyclerView.ViewHolder {
         TextView tvSubject, tvPeople;
         Button btnApply;

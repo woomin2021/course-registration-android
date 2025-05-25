@@ -11,7 +11,7 @@
         android:id="@+id/tvWelcome"
         android:text="000님 환영합니다!"
         android:textColor="#FFFFFF"
-        android:textSize="40sp"
+        android:textSize="30sp"
         android:layout_marginBottom="40dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
