@@ -1,7 +1,8 @@
-# 수강신청 연습 앱 (Course Registration Practice App)
+# 수강신청 연습 앱 (Course Registration Practice App) 
 
 실제 대학 수강신청 환경을 모티브로 한  
 **수강신청 시뮬레이션 Android 애플리케이션**입니다.  
+팀프로젝트로 진행했습니다.
 수강신청 경쟁 상황을 연습하고, 성공/실패 흐름을 체험할 수 있도록 구현했습니다.
 
 ---
@@ -20,9 +21,9 @@
 ## 👤 담당 역할
 
 - **woomin (본인)**
-  - Android 앱 전체 개발
-  - JSP 기반 백엔드 연동
-  - MySQL DB 설계 및 연동
+  - Android 앱 개발(수강신청과 로그인 회원가입 메인페이지)
+  - JSP 기반 백엔드 연동 
+  - MySQL DB 설계 및 연동(전체)
 
 ---
 
