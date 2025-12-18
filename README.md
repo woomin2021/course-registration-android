@@ -1,130 +1,108 @@
+# 수강신청 연습 앱 (Course Registration Practice App)
 
-Course Registration Practice App (수강신청 연습 앱)
+실제 대학 수강신청 환경을 모티브로 한  
+**수강신청 시뮬레이션 Android 애플리케이션**입니다.  
+수강신청 경쟁 상황을 연습하고, 성공/실패 흐름을 체험할 수 있도록 구현했습니다.
 
-대학교 수강신청 과정을 모사한 안드로이드 수강신청 연습 애플리케이션입니다.
-실제 수강신청 상황에서 발생하는 시간 제한, 경쟁 상황, 성공/실패 처리를 중심으로 구현하였습니다.
+---
 
-프론트엔드는 Android(Java, XML),
-백엔드는 JSP 기반 서버와 MySQL 데이터베이스를 사용하여 구성하였습니다.
+## 📌 프로젝트 개요
 
-⸻
+- **프로젝트명**: 수강신청 연습 앱 (Course Registration Practice App)
+- **프로젝트 유형**: 개인 프로젝트
+- **목적**
+  - 실제 수강신청 시스템 흐름 이해
+  - Android 앱과 서버(JSP) 연동 경험
+  - DB 기반 CRUD 및 로그인 처리 학습
 
-프로젝트 개요
-	•	프로젝트 유형: 개인 프로젝트 / 실습 프로젝트
-	•	목적
-	•	안드로이드 앱과 서버(JSP) 연동 경험
-	•	실제 수강신청 로직(신청, 중복 체크, 정원 제한 등) 구현
-	•	클라이언트–서버–DB 전체 흐름 이해
+---
 
-⸻
+## 👤 담당 역할
 
-사용 기술
+- **woomin (본인)**
+  - Android 앱 전체 개발
+  - JSP 기반 백엔드 연동
+  - MySQL DB 설계 및 연동
 
-Android (Frontend)
-	•	Java
-	•	Android XML
-	•	Activity / Intent
-	•	RecyclerView
-	•	Dialog / Toast
+---
 
-Backend
-	•	JSP
-	•	JDBC
-	•	Apache Tomcat
+## 🎯 주요 사용자
 
-Database
-	•	MySQL
+- 대학생
+- 수강신청을 처음 경험하는 신입생
+- 수강신청 연습이 필요한 사용자
 
-기타
-	•	REST 형태의 데이터 통신
-	•	JSON 데이터 처리
+---
 
-⸻
+## 💡 기획 배경 및 문제 해결
 
-주요 기능
+### 기획 배경
+- 실제 수강신청은 실패 경험이 많고 연습 기회가 부족함
+- 서버 통신, DB 연동을 포함한 실전형 Android 프로젝트 필요
 
-수강신청 기능
-	•	과목 목록 조회
-	•	수강신청 버튼 클릭 시 서버로 요청 전송
-	•	정원 초과 시 신청 실패 처리
-	•	이미 신청한 과목 중복 신청 방지
+### 해결 방안
+- 실제 수강신청과 유사한 UI/흐름 구현
+- 좌석 수 제한을 통한 신청 성공/실패 처리
+- 사용자별 수강 내역 관리 기능 제공
 
-내 수강내역 조회
-	•	사용자가 신청한 과목 목록 조회
-	•	신청 이력 DB 기반 관리
+---
 
-서버 연동
-	•	JSP를 통한 DB 조회 및 저장
-	•	JDBC를 이용한 SQL 처리
-	•	JSON 응답을 안드로이드 앱에서 파싱
+## 🛠 사용 기술
 
-⸻
+### Android (Frontend)
+- Java
+- XML (Layout)
+- Activity 기반 화면 구성
+- HTTP 통신
 
-화면 구성 (예시)
-	•	메인 화면: 과목 목록 표시
-	•	수강신청 화면: 신청 버튼 및 상태 표시
-	•	내 수강내역 화면: 신청 완료 과목 리스트
+### Backend
+- JSP
+- Servlet
+- JDBC
 
+### Database
+- MySQL
 
+---
 
-⸻
+## 📱 주요 기능
 
-프로젝트 구조
+- 회원가입 / 로그인
+- 과목 목록 조회
+- 수강신청 (좌석 제한 처리)
+- 수강신청 성공 / 실패 결과 표시
+- 나의 수강신청 내역 조회
+- 게시판 기반 수강신청 자리(티켓) 교환 기능
+  - 수강신청 취소/양도 게시글 작성
+  - 다른 사용자와 자리 교환 가능
+---
 
-Android
- ├─ java/
- │   ├─ activity
- │   ├─ adapter
- │   └─ model
- └─ res/
-     ├─ layout
-     └─ values
+---
 
-Backend (JSP)
- ├─ *.jsp
- ├─ WEB-INF/
- │   └─ web.xml
- └─ JDBC 연결 로직
+## 📸 실행 화면 (예정)
 
+- 로그인 화면
+- 과목 조회 화면
+- 수강신청 결과 화면
+- 나의 수강내역 화면
 
-⸻
+※ 실제 화면 캡처는 추후 추가 예정
 
-실행 방법
+---
 
-Android
-	1.	Android Studio에서 프로젝트 열기
-	2.	에뮬레이터 또는 실제 기기 실행
-	3.	서버 주소를 JSP 서버 주소로 설정
+## 📂 저장소
 
-Backend
-	1.	Apache Tomcat 실행
-	2.	JSP 프로젝트 배포
-	3.	MySQL DB 연결 설정 (DB 계정, URL)
+- **Android App**
+  - https://github.com/woomin2021/course-registration-android
 
-⸻
+- **JSP Backend**
+  - https://github.com/woomin2021/course-registration-backend-jsp
 
-배운 점
-	•	안드로이드와 서버 간 데이터 흐름 이해
-	•	JSP + JDBC 기반 서버 로직 구현 경험
-	•	실제 서비스와 유사한 비즈니스 로직 설계 경험
-	•	프론트엔드와 백엔드 역할 분리의 중요성 인식
+---
 
-⸻
+## ✨ 학습 및 성과
 
-향후 개선 사항
-	•	로그인/세션 기반 사용자 구분
-	•	동시 신청 경쟁 상황(락 처리) 강화
-	•	UI/UX 개선
-	•	Spring 기반 백엔드로 리팩토링
-
-⸻
-
-저장소
-	•	Android App
-https://github.com/woomin2021/course-registration-android
-	•	Backend (JSP)
-https://github.com/woomin2021/course-registration-backend-jsp
-
-
-
-
+- Android ↔ JSP 서버 통신 구조 이해
+- MySQL 기반 데이터 처리 경험
+- 실서비스 흐름을 고려한 앱 설계 경험
+- 수강신청 로직(좌석 제한) 구현을 통한 로직 설계 능력 향상
