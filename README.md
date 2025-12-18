@@ -124,9 +124,7 @@ Backend
 https://github.com/woomin2021/course-registration-android
 	•	Backend (JSP)
 https://github.com/woomin2021/course-registration-backend-jsp
-<img width="3024" height="1964" alt="스크린샷 2025-11-14 오후 9 38 02(2)" src="https://github.com/user-attachments/assets/7890d987-eaf0-4bb6-ac3f-3acfdbfc906d" />
 
 
 
-⸻
 
